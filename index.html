@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=320; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>GPSApp</title>
+	  <link rel="stylesheet" href="main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	  <script type="text/javascript" charset="utf-8" src="phonegap-1.0.0rc2.js"></script>
+          <script type="text/javascript" charset="utf-8">
+          
+          // The watch id references the current `watchHeading`
+          var watchPositionID = null;
+          var watchHeadingID = null;
+          
+          // Wait for PhoneGap to load
+          //
+          document.addEventListener("deviceready", onDeviceReady, false);
+          
+          // PhoneGap is ready
+          //
+          function onDeviceReady() {
+              startWatch();
+          }
+          
+          // Start watching the compass
+          //
+          function startWatch() {
+              // Update compass every 3 seconds
+              var options = { frequency: 1000 };
+              
+              watchHeadingID = navigator.compass.watchHeading(onHeadingSuccess, onHeadingError, options);
+              watchPositionID = navigator.geolocation.watchPosition(onPositionSuccess, onPositionError, options);
+          }
+          
+          // Stop watching the compass
+          //
+          function stopWatch() {
+              if (watchPositionID) {
+                  navigator.geolocation.clearPosition(watchPositionID);
+                  watchPositionID = null;
+              }
+          }
+              
+              function onHeadingSuccess(heading) {
+                  document.getElementById('heading').innerHTML = heading;
+              }
+              function onHeadingError() {
+                  alert('onHeadingError!');
+              }
+          
+          // onSuccess: Get the current heading
+          //
+          function onPositionSuccess(position) {
+              
+              /*alert(
+              'Latitude: '           + position.coords.latitude              + '<br />' +
+              'Longitude: '          + position.coords.longitude             + '<br />' +
+              'Altitude: '           + position.coords.altitude              + '<br />' +
+              'Accuracy: '           + position.coords.accuracy              + '<br />' +
+              'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
+              'Heading: '            + position.coords.heading               + '<br />' +
+              'Speed: '              + position.coords.speed                 + '<br />' +
+              'Timestamp: '          + new Date(position.timestamp)          + '<br />');*/
+              //document.getElementById('heading').innerHTML = position.coords.heading;
+              document.getElementById('speed').innerHTML = position.coords.speed;
+              document.getElementById('altitude').innerHTML = position.coords.altitude;
+              document.getElementById('coordinates').innerHTML = position.coords.latitude + '<br />' + position.coords.longitude;
+              
+          }
+          
+          // onError: Failed to get the heading
+          //
+          function onPositionError() {
+              alert('onPositionError!');
+          }
+          
+          </script>
+
+  </head>
+  <body onload="init()" id="stage" class="theme">
+    <div class="info" onclick="">
+        <div class="title">Heading</div>
+        <div class="data" id="heading">219</div>
+    </div>
+    <div class="info" onclick="">
+        <div class="title">Course</div>
+        <div class="data" id="course">294</div>
+    </div>
+    <div class="info large" onclick="">
+        <div class="title">Speed</div>
+        <div class="data" id="speed">64.3 kph</div>
+    </div>
+    <div class="info large" onclick="">
+        <div class="title">Coordinates</div>
+        <div class="data" id="coordinates">S036 41.487'<br/>E146 54.452'<br/>47m</div>
+    </div>
+    <div class="info large" onclick="">
+        <div class="title">Altitude</div>
+        <div class="data" id="altitude">313 +-70m</div>
+    </div>
+  </body>
+</html>
+
